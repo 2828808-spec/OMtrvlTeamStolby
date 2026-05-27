@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Mind: Сплочение на Столбах</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="assets/stolby-title.jpeg" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #17130f;
+    --ink-soft: #2b241f;
+    --paper: #eeeae3;
+    --paper-warm: #e2d9c9;
+    --stone: #877b6c;
+    --stone-light: #b9afa0;
+    --rust: #a8442a;
+    --rust-bright: #d4764e;
+    --line: rgba(23, 19, 15, 0.15);
+    --line-strong: rgba(23, 19, 15, 0.38);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.48;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; }
+
+  nav {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 20;
+    min-height: 68px;
+    padding: 14px 28px;
+    border-bottom: 1px solid rgba(238, 234, 227, 0.18);
+    background: rgba(23, 19, 15, 0.58);
+    color: var(--paper);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .brand img { display: block; width: 112px; height: auto; filter: brightness(0) invert(1); }
+
+  .brand span,
+  .nav-note,
+  .nav-cta,
+  .kicker,
+  .tag,
+  .mini,
+  .time,
+  .case-label,
+  .footer-meta {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .brand span {
+    color: rgba(238, 234, 227, 0.78);
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .nav-note {
+    color: rgba(238, 234, 227, 0.72);
+    font-size: 10px;
+    text-align: right;
+  }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 10px 13px;
+    border: 1px solid var(--paper);
+    border-radius: 3px;
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 10px;
+    transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    white-space: nowrap;
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    background: var(--rust-bright);
+    color: var(--paper);
+    border-color: var(--rust-bright);
+  }
+
+  .slide {
+    position: relative;
+    min-height: 100svh;
+    padding: 96px 28px 44px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .slide.compact {
+    min-height: auto;
+    padding-top: 64px;
+    padding-bottom: 32px;
+  }
+
+  .slide.tight {
+    min-height: auto;
+    padding-top: 32px;
+    padding-bottom: 15px;
+  }
+
+  .slide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.28;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.86' numOctaves='3' seed='12'/%3E%3CfeColorMatrix values='0 0 0 0 0.10 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.36 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  .slide-inner {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 760px);
+    margin: 0 auto;
+  }
+
+  .dark { color: var(--paper); background: var(--ink); }
+  .light { background: var(--paper); color: var(--ink); }
+  .warm { background: var(--paper-warm); }
+
+  .image-bg {
+    color: var(--paper);
+    background:
+      linear-gradient(90deg, rgba(16, 18, 15, 0.9) 0%, rgba(16, 18, 15, 0.62) 52%, rgba(16, 18, 15, 0.22) 100%),
+      linear-gradient(180deg, rgba(16, 18, 15, 0.22), rgba(16, 18, 15, 0.8)),
+      var(--hero) center / cover no-repeat,
+      var(--ink);
+  }
+
+  .image-bg.soft {
+    background:
+      linear-gradient(90deg, rgba(16, 18, 15, 0.84) 0%, rgba(16, 18, 15, 0.68) 50%, rgba(16, 18, 15, 0.36) 100%),
+      linear-gradient(180deg, rgba(16, 18, 15, 0.16), rgba(16, 18, 15, 0.84)),
+      var(--hero) center / cover no-repeat,
+      var(--ink);
+  }
+
+  .hero-stolby {
+    background:
+      linear-gradient(90deg, rgba(10, 12, 10, 0.88) 0%, rgba(10, 12, 10, 0.62) 46%, rgba(10, 12, 10, 0.18) 100%),
+      linear-gradient(180deg, rgba(10, 12, 10, 0.18) 0%, rgba(10, 12, 10, 0.12) 44%, rgba(10, 12, 10, 0.76) 100%),
+      var(--hero) center center / cover no-repeat,
+      var(--ink);
+  }
+
+  .kicker {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--stone);
+    font-size: 10px;
+    margin-bottom: 26px;
+  }
+
+  .dark .kicker,
+  .image-bg .kicker { color: rgba(238, 234, 227, 0.72); }
+  .kicker::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: 0.28; }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--rust-bright);
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+
+  h1, h2 { font-weight: 300; letter-spacing: 0; line-height: 0.98; }
+  h1 { max-width: 760px; font-size: clamp(52px, 12vw, 100px); margin: 32px 0 30px; text-shadow: 0 24px 56px rgba(0, 0, 0, 0.38); }
+  h2 { max-width: 760px; font-size: clamp(42px, 9vw, 78px); margin-bottom: 28px; }
+  h1 em, h2 em { color: var(--rust); font-style: italic; }
+  .dark h2 em, .image-bg h1 em, .image-bg h2 em { color: #e2a17c; }
+
+  .lede {
+    max-width: 640px;
+    color: var(--ink-soft);
+    font-size: clamp(19px, 3.8vw, 26px);
+    line-height: 1.42;
+  }
+
+  .dark .lede,
+  .image-bg .lede { color: rgba(238, 234, 227, 0.86); }
+
+  .mono-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 8px 12px;
+    border: 1px solid rgba(238, 234, 227, 0.26);
+    border-radius: 3px;
+    color: rgba(238, 234, 227, 0.78);
+    font-size: 10px;
+    background: rgba(238, 234, 227, 0.06);
+  }
+
+  .light .tag,
+  .warm .tag {
+    border-color: var(--line);
+    color: var(--stone);
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .split-list { margin-top: 36px; border-top: 1px solid var(--line-strong); }
+  .split-item {
+    display: grid;
+    grid-template-columns: 116px 1fr;
+    gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+
+  .dark .split-list { border-color: rgba(238, 234, 227, 0.28); }
+  .dark .split-item { border-color: rgba(238, 234, 227, 0.12); }
+  .mini { color: var(--stone); font-size: 10px; }
+  .dark .mini, .image-bg .mini { color: var(--stone-light); }
+  .split-item strong { display: block; font-size: clamp(20px, 4vw, 28px); font-weight: 300; line-height: 1.22; }
+
+  .quote {
+    position: relative;
+    margin-top: 38px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line-strong);
+    font-size: clamp(25px, 5.2vw, 38px);
+    font-style: italic;
+    line-height: 1.24;
+  }
+
+  .quote::before {
+    content: "“";
+    position: absolute;
+    top: -32px;
+    left: -10px;
+    color: var(--rust);
+    opacity: 0.26;
+    font-size: 128px;
+    line-height: 1;
+  }
+
+  .dark .quote { border-color: rgba(238, 234, 227, 0.24); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 34px;
+  }
+
+  .tile {
+    min-height: 132px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .dark .tile { border-color: rgba(238, 234, 227, 0.16); background: rgba(238, 234, 227, 0.045); }
+  .tile-title { font-size: clamp(22px, 4.8vw, 32px); line-height: 1.08; }
+  .tile-text { margin-top: 18px; color: var(--stone); font-size: 16px; }
+  .dark .tile-text { color: var(--stone-light); }
+
+  .timeline {
+    margin-top: 34px;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 118px 1fr;
+    gap: 22px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .time { color: var(--rust); font-size: 10px; padding-top: 4px; }
+  .step h3 { font-size: clamp(24px, 5vw, 36px); font-weight: 300; line-height: 1.08; margin-bottom: 8px; }
+  .step p { color: var(--stone); font-size: 17px; }
+
+  .photo-strip {
+    display: grid;
+    grid-template-columns: 1fr 0.78fr;
+    gap: 14px;
+    margin-top: 36px;
+  }
+
+  .photo {
+    min-height: 300px;
+    overflow: hidden;
+    border: 1px solid rgba(238, 234, 227, 0.18);
+    background: var(--ink-soft);
+  }
+
+  .photo img {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    display: block;
+    object-fit: cover;
+    filter: saturate(0.92) contrast(1.04);
+  }
+
+  .case-card {
+    margin-top: 34px;
+    padding: 28px 0 0;
+    border-top: 1px solid rgba(238, 234, 227, 0.22);
+  }
+
+  .case-label { color: var(--rust-bright); font-size: 10px; margin-bottom: 16px; }
+  .case-card p { max-width: 640px; color: var(--paper-warm); font-size: clamp(19px, 4vw, 27px); line-height: 1.35; }
+
+  .organizers {
+    margin-top: 30px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(238, 234, 227, 0.24);
+  }
+
+  .organizers-intro {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rust-bright);
+    margin-bottom: 16px;
+  }
+
+  .organizer-list {
+    display: grid;
+    gap: 0;
+  }
+
+  .organizer {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(238, 234, 227, 0.14);
+    align-items: start;
+  }
+
+  .organizer:last-child {
+    border-bottom: none;
+  }
+
+  .organizer-photo {
+    width: 92px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(238, 234, 227, 0.1);
+    border: 1px solid rgba(238, 234, 227, 0.24);
+  }
+
+  .organizer-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 34%;
+  }
+
+  .organizer-photo img.danila-photo {
+    object-position: center 22%;
+  }
+
+  .organizer-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--stone-light);
+    margin-bottom: 7px;
+  }
+
+  .organizer-name {
+    font-size: clamp(22px, 4.8vw, 31px);
+    font-weight: 300;
+    line-height: 1.08;
+    margin-bottom: 7px;
+  }
+
+  .organizer-text {
+    max-width: 560px;
+    color: rgba(238, 234, 227, 0.82);
+    font-size: 15px;
+    line-height: 1.46;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    margin-top: 38px;
+    padding: 14px 18px;
+    border: 1px solid var(--paper);
+    border-radius: 3px;
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
+  }
+
+  .button:hover { transform: translateY(-2px); background: var(--rust-bright); color: var(--paper); border-color: var(--rust-bright); }
+
+  .button.center {
+    display: flex;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .price-card {
+    margin-top: 36px;
+    padding-top: 34px;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .price-amount {
+    font-size: clamp(72px, 16vw, 124px);
+    line-height: 0.88;
+    color: var(--rust);
+    font-style: italic;
+  }
+
+  .price-caption {
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--stone);
+  }
+
+  .price-note {
+    max-width: 560px;
+    margin-top: 28px;
+    color: var(--ink-soft);
+    font-size: clamp(19px, 3.8vw, 26px);
+    line-height: 1.35;
+  }
+
+  footer {
+    padding: 36px 28px;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+  }
+
+  footer img { width: 132px; height: auto; filter: brightness(0) invert(1); }
+  .footer-meta { color: var(--stone-light); font-size: 10px; text-align: right; }
+
+  footer .footer-meta {
+    text-align: center;
+  }
+
+  .mono-row.center {
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+  }
+
+  .mono-row.center .tag {
+    justify-content: center;
+  }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 680px) {
+    nav { padding: 12px 18px; min-height: 60px; }
+    .brand img { width: 92px; }
+    .brand span { display: none; }
+    .nav-note, .nav-cta { font-size: 9px; }
+    .slide { min-height: 100svh; padding: 84px 22px 38px; }
+    .slide.compact { min-height: auto; padding-top: 56px; padding-bottom: 26px; }
+    .slide.tight { min-height: auto; padding-top: 28px; padding-bottom: 13px; }
+    h1 { font-size: clamp(46px, 14vw, 70px); }
+    h2 { font-size: clamp(38px, 12vw, 58px); }
+    .lede { font-size: 19px; }
+    .split-item, .step { grid-template-columns: 1fr; gap: 8px; }
+    .organizer { grid-template-columns: 76px 1fr; gap: 16px; padding: 16px 0; }
+    .organizer-photo { width: 76px; }
+    .organizer-text { font-size: 14px; }
+    .grid { grid-template-columns: 1fr; }
+    .tile { min-height: 118px; padding: 20px; }
+    .photo-strip { grid-template-columns: 1fr; }
+    .photo { min-height: 220px; }
+    footer { align-items: center; flex-direction: column; }
+    .footer-meta { text-align: center; }
+  }
+
+  @media print {
+    nav, footer { display: none; }
+    body { background: #fff; }
+    .slide { min-height: 100vh; page-break-after: always; break-after: page; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">
+    <img src="assets/open-mind-logo.svg" alt="Open Mind">
+    <span>Сплочение на Столбах</span>
+  </div>
+  <a class="nav-cta" href="https://t.me/Ramil_RS">Оставить заявку</a>
+</nav>
+
+<main>
+  <section class="slide image-bg hero-stolby" style="--hero: url('assets/stolby-title.jpeg');">
+    <div class="slide-inner">
+      <div class="kicker"><span><span class="dot"></span>Open Mind Travel</span></div>
+      <h1>Сплочение <em>на Столбах</em></h1>
+      <p class="lede">Командная программа для тех, кому важно усилить доверие, поддержку и живое взаимодействие между людьми.</p>
+      <div class="mono-row center">
+        <span class="tag">12:00-18:00</span>
+        <span class="tag">Научно-познавательный центр «Нарым»</span>
+        <span class="tag">Столбы</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide warm compact">
+    <div class="slide-inner">
+      <div class="kicker">01 / суть</div>
+      <h2>Это не прогулка.<br><em>И не обычный тимбилдинг.</em></h2>
+      <p class="lede">Это 5-6 часов, где команда выходит из офисных ролей и через тело, природу, маршрут, ужин и костер начинает чувствовать друг друга как единое целое.</p>
+      <div class="quote">Человеку нужен человек. Особенно в сложных задачах.</div>
+    </div>
+  </section>
+
+  <section class="slide dark">
+    <div class="slide-inner">
+      <div class="kicker">02 / проблема</div>
+      <h2>Команда может быть рядом.<br><em>Но не быть вместе.</em></h2>
+      <div class="split-list">
+        <div class="split-item"><span class="mini">внутри</span><strong>люди не слышат друг друга и отделы живут отдельно</strong></div>
+        <div class="split-item"><span class="mini">часто</span><strong>сильные тащат, слабые выпадают, руководитель склеивает все вручную</strong></div>
+        <div class="split-item"><span class="mini">не хватает</span><strong>доверия, открытости и человеческого контакта</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide image-bg soft" style="--hero: url('assets/stolby-perya.jpeg');">
+    <div class="slide-inner">
+      <div class="kicker">03 / почему Столбы</div>
+      <h2>Столбы быстро показывают,<br><em>кто рядом по-настоящему.</em></h2>
+      <p class="lede">Здесь важны не должности. Важны темп, внимание, рука на подъеме, способность ждать и видеть состояние другого.</p>
+      <div class="mono-row">
+        <span class="tag">кто поддерживает</span>
+        <span class="tag">кто ведет</span>
+        <span class="tag">кто слышит</span>
+        <span class="tag">кто становится опорой</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light">
+    <div class="slide-inner">
+      <div class="kicker">04 / принцип</div>
+      <h2>Сначала собираем тело.<br><em>Потом команду.</em></h2>
+      <p class="lede">Головой люди часто еще в офисе. Тело возвращает внимание в настоящий момент и быстро показывает правду.</p>
+      <div class="grid">
+        <div class="tile"><div class="mini">дыхание</div><div class="tile-title">выдохнуть рабочий шум</div></div>
+        <div class="tile"><div class="mini">движение</div><div class="tile-title">почувствовать свой темп</div></div>
+        <div class="tile"><div class="mini">маршрут</div><div class="tile-title">идти не отдельно, а связкой</div></div>
+        <div class="tile"><div class="mini">круг</div><div class="tile-title">перевести опыт в слова</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark">
+    <div class="slide-inner">
+      <div class="kicker">05 / рамка маршрута</div>
+      <h2>Команда идет не со скоростью сильнейшего.<br><em>Команда идет так, чтобы дошли все.</em></h2>
+      <p class="lede">Участники делятся на связки. Внутри появляются роли: ведущий, замыкающий, наблюдатель и хранитель темпа.</p>
+      <div class="quote">Тело не врет. Маршрут не врет. Группа не врет.</div>
+    </div>
+  </section>
+
+  <section class="slide warm">
+    <div class="slide-inner">
+      <div class="kicker">06 / программа</div>
+      <h2>Ритм дня.</h2>
+      <div class="timeline">
+        <article class="step">
+          <div class="time">11:30</div>
+          <div><h3>Сбор у центрального въезда</h3><p>Встреча у центрального въезда в национальный парк «Столбы», погрузка в автобус и движение 7 км по дороге до кардона «Нарым».</p></div>
+        </article>
+        <article class="step">
+          <div class="time">12:00</div>
+          <div><h3>Сбор в Научно-познавательном центре «Нарым»</h3><p>Фуршет, чай, знакомство и вводная рамка. Люди переключаются из рабочего режима.</p></div>
+        </article>
+        <article class="step">
+          <div class="time">12:30</div>
+          <div><h3>Цигун и медитация</h3><p>Дыхание, мягкая разминка, прохлопывания тела и настройка внимания.</p></div>
+        </article>
+        <article class="step">
+          <div class="time">14:00</div>
+          <div><h3>Начало пути</h3><p>Нарым → Слоник → Скала «Дед» → Львиные Ворота → Перья → Возвращение в «Нарым».</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light tight">
+    <div class="slide-inner">
+      <div class="kicker">07 / ключевые точки</div>
+      <h2>Маршрут становится <em>зеркалом команды.</em></h2>
+      <div class="timeline">
+        <article class="step">
+          <div class="time">14:20</div>
+          <div><h3>Слоник</h3><p>Кто-то пробует базовое скалолазание, кто-то страхует, кто-то поддерживает и подает руку.</p></div>
+        </article>
+        <article class="step">
+          <div class="time">14:45</div>
+          <div><h3>Видовка на скале «Дед»</h3><p>Крик в пространство, короткая медитация, практика объединения и 3-5 минут тишины.</p></div>
+        </article>
+        <article class="step">
+          <div class="time">15:00</div>
+          <div><h3>Львиные ворота</h3><p>Намерение, символический переход, общее фото и вопрос: что усилить в себе и команде?</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide image-bg" style="--hero: url('assets/stolby-moss.jpeg');">
+    <div class="slide-inner">
+      <div class="kicker">08 / закрепление</div>
+      <h2>После пути еда становится <em>ритуалом.</em></h2>
+      <div class="case-card">
+        <div class="case-label">16:00-18:00 / ужин, костер, круг выводов</div>
+        <p>Команда восстанавливается, разговаривает иначе и отвечает на три вопроса: что я понял о себе, что увидел в команде, что забираю с собой в работу.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark">
+    <div class="slide-inner">
+      <div class="kicker">09 / результат для команды</div>
+      <h2>Остается общий <em>эмоциональный якорь.</em></h2>
+      <div class="grid">
+        <div class="tile"><div class="tile-title">живое доверие</div><div class="tile-text">не из презентации, а из общего опыта</div></div>
+        <div class="tile"><div class="tile-title">опыт поддержки</div><div class="tile-text">когда важно, чтобы дошли все</div></div>
+        <div class="tile"><div class="tile-title">тихие опоры</div><div class="tile-text">люди, которые держат команду без шума</div></div>
+        <div class="tile"><div class="tile-title">больше честности</div><div class="tile-text">в разговоре, внимании и рабочем контакте</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide warm">
+    <div class="slide-inner">
+      <div class="kicker">10 / результат для руководителя</div>
+      <h2>Руководитель видит <em>команду в действии.</em></h2>
+      <div class="split-list">
+        <div class="split-item"><span class="mini">кто</span><strong>реально поддерживает людей и берет ответственность</strong></div>
+        <div class="split-item"><span class="mini">где</span><strong>есть скрытое напряжение или выпадение из общего движения</strong></div>
+        <div class="split-item"><span class="mini">на кого</span><strong>можно опираться в сложных задачах и новом этапе</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide image-bg soft" style="--hero: url('assets/stolby-view.jpeg');">
+    <div class="slide-inner">
+      <div class="kicker">11 / кто мы</div>
+      <h2>Команду ведут люди,<br><em>которые сами знают путь.</em></h2>
+      <p class="lede">Open Mind Travel создает среду, где природа, маршрут, безопасность, разговор и еда работают как единый опыт.</p>
+      <div class="organizers">
+        <div class="organizers-intro">организаторы программы</div>
+        <div class="organizer-list">
+          <article class="organizer">
+            <div class="organizer-photo">
+              <img src="assets/ramil-sayfutdinov-ultra.jpg" alt="Рамиль Сайфутдинов" width="194" height="420" loading="lazy" decoding="async">
+            </div>
+            <div>
+              <div class="organizer-role">основатель Open Mind Travel</div>
+              <h3 class="organizer-name">Рамиль Сайфутдинов</h3>
+              <p class="organizer-text">11 лет в крупных индустриальных проектах. Создает среду, где человек останавливается и начинает слышать себя. Практика — это чистая физика: горы, тишина, разговор.</p>
+            </div>
+          </article>
+          <article class="organizer">
+            <div class="organizer-photo">
+              <img src="assets/sergey-savin-ultra.jpg" alt="Сергей Савин" width="244" height="420" loading="lazy" decoding="async">
+            </div>
+            <div>
+              <div class="organizer-role">сооснователь программы «Сплочение на Столбах»</div>
+              <h3 class="organizer-name">Сергей Савин</h3>
+              <p class="organizer-text">20+ лет в горах, пещерах и полевых условиях. Отвечает за безопасность, глубокие разговоры и реальную среду, в которой все происходит.</p>
+            </div>
+          </article>
+          <article class="organizer">
+            <div class="organizer-photo">
+              <img class="danila-photo" src="assets/danila-popov-ultra.jpg" alt="Данила Попов" width="315" height="420" loading="lazy" decoding="async">
+            </div>
+            <div>
+              <div class="organizer-role">шеф-повар Open Mind Travel</div>
+              <h3 class="organizer-name">Данила Попов</h3>
+              <p class="organizer-text">10 лет в лучших ресторанах Красноярска. Умеет даже в природной среде сделать из простых продуктов полноценный гастрономический опыт.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light">
+    <div class="slide-inner">
+      <div class="kicker">12 / стоимость</div>
+      <h2>Стоимость <em>программы.</em></h2>
+      <div class="price-card">
+        <div class="price-amount">12 000</div>
+        <div class="price-caption">рублей / на сотрудника</div>
+        <p class="price-note">Если в команде больше 15 человек, стоимость обсуждается отдельно под формат, состав группы и задачи компании.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark">
+    <div class="slide-inner">
+      <div class="kicker">13 / финал</div>
+      <h2>Мы не развлекаем сотрудников.<br><em>Мы создаем опыт, который меняет взаимодействие.</em></h2>
+      <p class="lede">«Сплочение на Столбах» помогает команде выйти из офиса, пройти общий путь, увидеть друг друга живыми людьми и вернуться в работу с новым уровнем доверия.</p>
+      <div class="photo-strip">
+        <div class="photo"><img src="assets/stolby-yog.jpeg" alt="Практика внимания на Столбах"></div>
+        <div class="photo"><img src="assets/stolby-perya.jpeg" alt="Команда у скалы Перья"></div>
+      </div>
+      <a class="button center" href="https://t.me/Ramil_RS">Обсудить программу</a>
+      <div class="mono-row center">
+        <span class="tag">Open Mind Travel</span>
+        <span class="tag">Красноярск</span>
+        <span class="tag">Столбы</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <img src="assets/open-mind-logo.svg" alt="Open Mind">
+  <div class="footer-meta">сплочение через общий путь</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.slide-inner > *').forEach((element) => {
+    element.classList.add('reveal');
+    observer.observe(element);
+  });
+</script>
+</body>
+</html>
